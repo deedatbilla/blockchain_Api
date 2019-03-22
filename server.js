@@ -19,7 +19,7 @@ import {Block,Transaction,LandOwnerShip, generateNextBlock, getBlockchain} from 
 import {generatekeys,generateSignature,getDataFromSignature,ProcessTransaction}from './src/transaction';
 import {firebase}from './firebase/firebasekey';
 import {addland,landownership,saveAsaasecode,getAsaaseDetails,updateAsaaseCode,AsaasecodeExist} from './firebase/modules';
-import {encryptData,decryptdata,generateSecurityKey} from './firebase/helper';
+import {encryptData,decryptdata,generateSecurityKey,sendEmail,designMessagebody} from './firebase/helper';
 
 
 
@@ -44,6 +44,7 @@ import {encryptData,decryptdata,generateSecurityKey} from './firebase/helper';
 
       app.post('/RegisterLand',function(req,res){
         var data=landownership(req.body);
+        var phonenumber=req.body.contact;
         var newBlock=generateNextBlock(req.body);
         var feedback=newBlock.message;
         if(feedback !=null && data.msg !=null){
@@ -57,7 +58,11 @@ import {encryptData,decryptdata,generateSecurityKey} from './firebase/helper';
           others:req.body
         }
         saveAsaasecode(body,function(details){
-          res.send(details)
+          var asaasecode=details.asaasecode;
+          var securitynumber=details.securitynumber;
+          var body=designMessagebody(asaasecode,securitynumber);
+          sendEmail(phonenumber,body,"Registration sucessful.Find your details below")
+        
         })
       
       })

@@ -43,7 +43,22 @@ var generateString=function(){
     
 }
 
+function designMessagebody(asaasecode,securitycode){
+    var message;
+    var msg1;
+    var msg2;
+    var msg3;
+      msg1="Thanks for registering with hashlands.Kindly keep the details given to you very safe from unauthorised people."
+      msg2="Asaasecode"+" "+asaasecode+ " gives you access to all your land ownership details.";
+      msg3="Securitycode"+" "+securitycode+" will be use later for login into the mobile app.";
+      message=msg1+" "+msg2+" "+msg3;
+
+    
+
+      return message;
+}
  var sendEmail=function(reciepient,messageBody,messageSubject){
+     
      var transporter=nodemailer.createTransport({
          service:'gmail',
          auth:{
@@ -166,8 +181,8 @@ function encryptData(text) {
     return theString;
     
 }
-var g
+
    //console.log(land.OtherDocument);
-   export{encryptData,decryptdata,generateAsaaseCode,generateSecurityKey};
+   export{encryptData,decryptdata,generateAsaaseCode,generateSecurityKey,sendEmail,designMessagebody};
    
    
