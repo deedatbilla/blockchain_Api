@@ -19,9 +19,7 @@ import {Block,Transaction,LandOwnerShip, generateNextBlock, getBlockchain} from 
 import {generatekeys,generateSignature,getDataFromSignature,ProcessTransaction}from './src/transaction';
 import {firebase}from './firebase/firebasekey';
 import {addland,landownership,saveAsaasecode,getAsaaseDetails,updateAsaaseCode,AsaasecodeExist} from './firebase/modules';
-import {encryptData,decryptdata} from './firebase/helper';
-
-
+import {encryptData,decryptdata,generateSecurityKey} from './firebase/helper';
 
 
 
@@ -58,7 +56,9 @@ import {encryptData,decryptdata} from './firebase/helper';
           landid:data.index,
           others:req.body
         }
-        saveAsaasecode(body);
+        saveAsaasecode(body,function(details){
+          res.send(details)
+        })
       
       })
 

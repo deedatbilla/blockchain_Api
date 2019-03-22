@@ -7,7 +7,7 @@ const algorithm='aes-256-cbc';
 const key='abcdefghijklmnopqrstuvwxyz123456';
 const iv=crypto.randomBytes(16);
 const util = require('util')
-//var randomNumber = require("random-number-csprng");
+var randomNumber = require("random-number-csprng");
 
 
 
@@ -157,17 +157,17 @@ function encryptData(text) {
    }
    
    
-   function generateSecurityKey(){
-       var counter=0;
-       var  number=[];
-       while(counter<8){
-           number.push(randomNumber(1,9))
-           counter++
-       }
-
-    return number;
-   }
+   var generateSecurityKey=function(){
+    var theString=randomstring.generate({
+        length:8,
+        charset:'hex',
+        capitalization:'uppercase'
+    });
+    return theString;
+    
+}
+var g
    //console.log(land.OtherDocument);
-   export{encryptData,decryptdata,generateAsaaseCode};
+   export{encryptData,decryptdata,generateAsaaseCode,generateSecurityKey};
    
    
