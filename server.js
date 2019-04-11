@@ -18,11 +18,9 @@ import {connectToPeers, getSockets, initP2PServer} from './src/peer2peer';
 import {Block,Transaction,LandOwnerShip, generateNextBlock, getBlockchain} from './src/blockchain';
 import {generatekeys,generateSignature,getDataFromSignature,ProcessTransaction}from './src/transaction';
 import {firebase}from './firebase/firebasekey';
-import {addland,landownership,saveAsaasecode,getAsaaseDetails,updateAsaaseCode,AsaasecodeExist} from './firebase/modules';
-import {encryptData,decryptdata,generateSecurityKey,sendEmail,designMessagebody} from './firebase/helper';
-
-
-
+import {addland,landownership,saveAsaasecode,getAsaaseDetails,updateAsaaseCode,asaasecodeExist,addLandToAccount} from './firebase/modules';
+import {encryptData,decryptdata,generateSecurityKey,sendEmail,designMessagebody,generateLandCode,generateAsaaseCode} from './firebase/helper';
+import {register,login} from './authentication/authentication';
 
 
 
@@ -36,11 +34,29 @@ import {encryptData,decryptdata,generateSecurityKey,sendEmail,designMessagebody}
       res.sendFile(path.join(__dirname, 'index.html'));
   });
 
-   
-     
+
+
+      
       app.get('/blocks', function (req, res) {
         res.send(getBlockchain());
       });
+
+      app.post('/login',function(req,res){
+        login(req.body,function(data){
+          var response=data;
+          if(response.auth){
+            res.status(200).send({success:response.response})
+          }
+          else{
+            res.status(404).send(response.response)
+          }
+        })
+         
+      })
+
+      app.post('/register',function(req,res){
+
+      })
 
       app.post('/RegisterLand',function(req,res){
         var data=landownership(req.body);
@@ -60,16 +76,31 @@ import {encryptData,decryptdata,generateSecurityKey,sendEmail,designMessagebody}
         saveAsaasecode(body,function(details){
           var asaasecode=details.asaasecode;
           var securitynumber=details.securitynumber;
-          var body=designMessagebody(asaasecode,securitynumber);
-          sendEmail(phonenumber,body,"Registration sucessful.Find your details below")
-        
+          var messagebody=designMessagebody(asaasecode,securitynumber);
+          sendEmail(phonenumber,messagebody,"Registration sucessful.Find your details below") 
         })
       
       })
 
+      app.post('/addLandToAccount',function(req,res){
+        addLandToAccount(req.body,function(err,data){
+          if(err){
+            res.status(404).send({error:err.message})
+        
+            
+          }
+          else{
+            res.status(200).send({response:data})
+            
+            
+          }
+         
+        })
+          
+      })
 
       app.post('/completeTransaction',function(req,res){
-        updateAsaaseCode(req.body,"GEA-467-188-732",function(detail){
+        updateAsaaseCode(req.body,req.body.asaasecode,function(detail){
           var data=detail;
           res.send(data);
         });
